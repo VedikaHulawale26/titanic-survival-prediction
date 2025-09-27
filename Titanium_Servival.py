@@ -9,6 +9,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import  root_mean_squared_error
 import os
 import joblib
+# Using the GradientBoostingClassifier model to predict the survival of Titanic passengers
 
 # 1.store mode and pipeline train in this file
 MODEL_FILE="model.pkl"

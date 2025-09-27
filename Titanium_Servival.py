@@ -34,3 +34,34 @@ def built_pipeline(data_num,data_cat):
     ])
 
     return full_pipeline
+
+# 3.MODEL_FILE is not created (mean model not train and not store in model.pkl)
+if not os.path.exists(MODEL_FILE):
+    
+    # Let Train Model
+    data=pd.read_csv("train.csv")
+    
+    # Seperate the Servived
+    data_survived=data["Survived"]
+    data_train=data.drop("Survived",axis=1)
+
+    # seperated the numerical and categorical features
+    data_num=data_train.select_dtypes(include=[np.number])
+    data_cat=data_train.select_dtypes(exclude=[np.number])
+
+    # call Method built_pipeline
+    pipeline =built_pipeline(data_num, data_cat) 
+    data_prepared = pipeline.fit_transform(data_train)
+
+    #Define model
+    model=GradientBoostingClassifier()
+    
+    #fit model
+    model.fit(data_prepared,data_survived)
+    
+    #store the model in model file
+    joblib.dump(model, MODEL_FILE)
+    joblib.dump(pipeline, PIPELINE_FILE)
+    print("Model is trained. Congrats!")
+
+

@@ -42,8 +42,8 @@ if not os.path.exists(MODEL_FILE):
     data=pd.read_csv("train.csv")
     
     # Seperate the Servived
-    data_survived=data["Survived"]
-    data_train=data.drop("Survived",axis=1)
+    data_survived=data["Survived"].copy()
+    data_train=data.drop("Survived",axis=1).copy()
 
     # seperated the numerical and categorical features
     data_num=data_train.select_dtypes(include=[np.number])
@@ -63,5 +63,24 @@ if not os.path.exists(MODEL_FILE):
     joblib.dump(model, MODEL_FILE)
     joblib.dump(pipeline, PIPELINE_FILE)
     print("Model is trained. Congrats!")
+else:
+    # Lets do inference
+    model = joblib.load(MODEL_FILE)
+    pipeline = joblib.load(PIPELINE_FILE)
+    
+    test_data = pd.read_csv('test.csv')
+    transformed_input = pipeline.transform(test_data)
+    predictions = model.predict(transformed_input)
+    test_data['Survived'] = predictions
+
+    test_data.to_csv("output_Allinfo.csv", index=False)
+    output = test_data[['PassengerId', 'Survived']]
+    output.to_csv('output.csv', index=False)
+    print("Inference is complete, results saved to output.csv Enjoy!")
+
+
+
+
+
 
 
